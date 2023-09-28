@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,37 +5,35 @@
     <title>Title</title>
 
     <style>
-    	#video {
-    		transform: rotateY(180deg);
-    		-webkit-transform:rotateY(180deg); /* Safari and Chrome */
-    		-moz-transform:rotateY(180deg); /* Firefox */
-    		
-    	}
+        #video {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg); /* Safari and Chrome */
+            -moz-transform: rotateY(180deg); /* Firefox */
+        }
     </style>
     
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-     <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.0/socket.io.js'></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 </head>
 
 <body>
 
     <div id="container">
-    <video autoplay playsinline id="videoElement"></video>
-    <canvas id="canvas"  width="400" height="300"></canvas>
+        <video autoplay playsinline id="videoElement"></video>
+        <canvas id="canvas" width="400" height="300"></canvas>
     </div>
 
-    <div class = 'video'>
-        <img id="photo"  width="400"  height="300">
+    <div class="video">
+        <img id="photo" width="400" height="300">
         <h1>video</h1>
     </div>
 
-    <script type="text/javascript" charset="utf-8">
-      
-        var socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
+    <script type="text/javascript">
+        var socket = io();
+
         socket.on('connect', function(){
             console.log("Connected...!", socket.connected)
         });
-
 
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
@@ -44,7 +41,6 @@
 
         video.width = 400;
         video.height = 300; 
-    
 
         if (navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
@@ -52,30 +48,34 @@
                 video.srcObject = stream;
                 video.play();
             })
-            .catch(function (err0r) {
-
+            .catch(function (error) {
+                console.error("Error accessing webcam:", error);
             });
         }
 
         const FPS = 6;
         setInterval(() => {
-            width=video.width;
-            height=video.height;
-            context.drawImage(video, 0, 0, width , height );
+            width = video.videoWidth;
+            height = video.videoHeight;
+            context.drawImage(video, 0, 0, width, height);
+            
+            // Draw a vertical blue line
+            const lineX = 200; // Adjust the x-coordinate as needed
+            context.beginPath();
+            context.moveTo(lineX, 0);
+            context.lineTo(lineX, height);
+            context.strokeStyle = 'blue';
+            context.lineWidth = 2; // Adjust the line width as needed
+            context.stroke();
+
             var data = canvas.toDataURL('image/jpeg', 0.5);
-            context.clearRect(0, 0, width,height );
+            context.clearRect(0, 0, width, height);
             socket.emit('image', data);
         }, 1000/FPS);
 
         socket.on('response_back', function(image){
-                photo.setAttribute('src', image );
-                
+            document.getElementById('photo').setAttribute('src', image);
         });
-
     </script>
-
-
- </body>
-
+</body>
 </html>
-

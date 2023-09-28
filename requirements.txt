@@ -1,5 +1,6 @@
 Flask
-opencv-python
-mediapipe
-matplotlib
+Flask-SocketIO
+Pillow
+opencv-python-headless
 numpy
+imutils
