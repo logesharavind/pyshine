@@ -58,15 +58,6 @@
             width = video.videoWidth;
             height = video.videoHeight;
             context.drawImage(video, 0, 0, width, height);
-            
-            // Draw a vertical blue line
-            const lineX = 200; // Adjust the x-coordinate as needed
-            context.beginPath();
-            context.moveTo(lineX, 0);
-            context.lineTo(lineX, height);
-            context.strokeStyle = 'blue';
-            context.lineWidth = 2; // Adjust the line width as needed
-            context.stroke();
 
             var data = canvas.toDataURL('image/jpeg', 0.5);
             context.clearRect(0, 0, width, height);

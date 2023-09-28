@@ -30,6 +30,10 @@ def readb64(base64_string):
 def image(data_image):
     frame = readb64(data_image)
 
+    # Draw a vertical blue line on the frame
+    line_x = 200  # Adjust the x-coordinate as needed
+    cv2.line(frame, (line_x, 0), (line_x, frame.shape[0]), (255, 0, 0), 2)
+
     imgencode = cv2.imencode('.jpeg', frame, [cv2.IMWRITE_JPEG_QUALITY, 40])[1]
     stringData = base64.b64encode(imgencode).decode('utf-8')
     b64_src = 'data:image/jpeg;base64,'
